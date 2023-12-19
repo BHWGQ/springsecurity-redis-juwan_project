@@ -65,8 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //拦截规则配置
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/login").anonymous()
+                .antMatchers("/user/login").permitAll()
                 .antMatchers("/login").denyAll()
+                .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated();
         http.formLogin().successHandler(successHandler)
                 .failureHandler(failureHandler);

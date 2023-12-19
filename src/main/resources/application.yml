@@ -13,6 +13,9 @@ spring:
     port: 6379
     password: 20031028
     timeout: 2000
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 sa-token:
   # token 名称（同时也是 cookie 名称）
   token-name: satoken
@@ -28,3 +31,7 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
