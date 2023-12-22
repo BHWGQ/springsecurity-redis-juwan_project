@@ -6,13 +6,14 @@ import com.example.demo.dto.resp.Response;
 import com.example.demo.dto.resp.ResponseCodeEnum;
 import com.example.demo.dto.resp.ResponseUtil;
 import com.example.demo.service.SysLoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.Objects;
 
+@Api(tags = "用户登录接口管理")
 @RestController
 public class PortalController {
 
@@ -30,6 +32,7 @@ public class PortalController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/user/login")
+    @ApiOperation(value = "登录的具体接口")
     public Response<String> stringResponse (@RequestBody SysLoginReq req){
         try {
 //            // 创建BCryptPasswordEncoder实例

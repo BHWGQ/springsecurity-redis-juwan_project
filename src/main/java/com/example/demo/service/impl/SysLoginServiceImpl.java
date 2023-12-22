@@ -46,6 +46,9 @@ public class SysLoginServiceImpl extends ServiceImpl<SysLoginMapper, SysLoginEnt
         if (Objects.isNull(sysLoginEntity)){
             return null;
         }
+        if (sysLoginEntity.getStatus() != 0){
+            throw new RuntimeException("用户已被禁用");
+        }
         try {
             Map<String,Object> claims = new HashMap<>();
             claims.put("userId",req.getUsername());

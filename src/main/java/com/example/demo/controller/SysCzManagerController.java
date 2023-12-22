@@ -7,6 +7,8 @@ import com.example.demo.dto.req.SysCzManagerXReq;
 import com.example.demo.dto.resp.*;
 import com.example.demo.entity.SysCzManagerEntity;
 import com.example.demo.service.SysCzManagerService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,15 +21,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
+@Api(tags = "用户充值接口管理")
 @RequestMapping("/czmanager")
 public class SysCzManagerController {
     @Resource
     private SysCzManagerService service;
 
-
-    private static final Logger logger = LoggerFactory.getLogger(SysCzManagerController.class);
-
     @GetMapping("/getAll")
+    @ApiOperation(value = "获取未充值的所有用户信息",tags = {"用户充值接口管理"})
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER')")
     public Response<List<SysCzManagerResp>> sysCzManagerRespResponse (@RequestParam("a") Integer a){
         List<SysCzManagerEntity> sysCzManagerEntities = service.getAll(a);
@@ -36,12 +37,11 @@ public class SysCzManagerController {
         }
         List<SysCzManagerResp> resps = sysCzManagerEntities.stream()
                 .map(entity -> BeanUtil.copyProperties(entity, SysCzManagerResp.class)).collect(Collectors.toList());
-        List<SysCzManagerResp> resps1 = BeanUtil.copyToList(sysCzManagerEntities, SysCzManagerResp.class);
-
         return ResponseUtil.create(ResponseCodeEnum.OK,resps);
     }
 
     @GetMapping("/gettodayData")
+    @ApiOperation(value = "获取今日的数据信息",notes = "分别为充值总金额，移动、电信、联通分金额",tags = {"用户充值接口管理","用户订单接口管理"})
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER')")
     public Response<SysTodayDataResp> sysTodayDataRespResponse (@RequestParam("a")String a,
                                                                 @RequestParam("b") String b,
@@ -63,6 +63,7 @@ public class SysCzManagerController {
     }
 
     @PostMapping("/xiadan")
+    @ApiOperation(value = "模拟给用户完成下单",notes = "完成下单，单号会传递给orderManager",tags = {"用户充值接口管理","用户订单接口管理"})
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response<String> stringResponse (@RequestBody List<SysCzManagerXReq> req){
         String a = service.xiugai(req);
@@ -82,6 +83,7 @@ public class SysCzManagerController {
     }
 
     @GetMapping("/orderStatistics")
+    @ApiOperation(value = "获取当日信息",notes = "获取充值总量，充值成功，待充值,充值失败，正在充值的订单等信息，获取他们的订单数以及金额",tags = "用户订单接口管理")
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER')")
     public Response<SysOrderStatisticsResp>sysOrderStatisticsRespResponse (){
         long CzAllDan = service.getCzAllDan();
@@ -112,6 +114,7 @@ public class SysCzManagerController {
     }
 
     @PostMapping("/insertcz")
+    @ApiOperation(value = "模拟用户端下单流程",notes = "下单首先会通过黑名单查询，不在黑名单才能成功下单",tags = {"用户充值接口管理","用户黑名单接口管理"})
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response<String> stringResponse (@RequestBody SysCzManager1Req req){
         String sysCzManagerEntity = service.insertcz(req);
