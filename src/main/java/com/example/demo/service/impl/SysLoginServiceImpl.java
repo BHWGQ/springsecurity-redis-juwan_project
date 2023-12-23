@@ -70,7 +70,7 @@ public class SysLoginServiceImpl extends ServiceImpl<SysLoginMapper, SysLoginEnt
     @Override
     public String regist(SysLoginInsertReq req) {
         LambdaQueryWrapper<SysLoginEntity> lambdaQueryWrapper = new QueryWrapper<SysLoginEntity>().lambda()
-                .eq(SysLoginEntity::getId,req.getId());
+                .eq(SysLoginEntity::getUserName,req.getUserName());
         SysLoginEntity sysLoginEntity = mapper.selectOne(lambdaQueryWrapper);
         if (Objects.isNull(sysLoginEntity)){
             int status = 0;

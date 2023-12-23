@@ -50,8 +50,8 @@ public class SysLoginController {
     @ApiOperation(value = "注册用户")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response<String> stringResponse (@RequestBody SysLoginInsertReq req){
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        req.setPassword(passwordEncoder.encode(req.getPassword()));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        req.setPassword(passwordEncoder.encode(req.getPassword()));
         String a = service.regist(req);
         if (Objects.isNull(a)){
             return ResponseUtil.create(ResponseCodeEnum.UPDATE_FAIL,null);
