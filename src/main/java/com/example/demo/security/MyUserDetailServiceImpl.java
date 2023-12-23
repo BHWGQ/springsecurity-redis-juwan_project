@@ -38,8 +38,6 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
 //        String encodedPassword = passwordEncoder.encode(sysLoginEntity.getPassword());
 //        sysLoginEntity.setPassword(encodedPassword);
         List<String> list = service.getUserPermissions(username);
-        String encodePassword = "{noop}"+sysLoginEntity.getPassword();
-        sysLoginEntity.setPassword(encodePassword);
         return new LoginUser(sysLoginEntity,list);
     }
 

@@ -4,14 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.Exception.TeamException;
-import com.example.demo.dto.req.SysLoginReq;
-import com.example.demo.dto.resp.LoginUser;
-import com.example.demo.entity.SysLoginEntity;
 import com.example.demo.service.SysLoginService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.catalina.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
+import com.example.demo.service.impl.PasswordService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,18 +13,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -44,10 +33,13 @@ public class JwtTokenInterceptor extends OncePerRequestFilter {
 
     private SysLoginService service;
 
-    public JwtTokenInterceptor(RedisTemplate<String, String> redisTemplate, AuthenticationManager authenticationManager,SysLoginService service) {
+    private PasswordService passwordService;
+
+    public JwtTokenInterceptor(RedisTemplate<String, String> redisTemplate, AuthenticationManager authenticationManager,SysLoginService service,PasswordService passwordService) {
         this.redisTemplate = redisTemplate;
         this.authenticationManager = authenticationManager;
         this.service = service;
+        this.passwordService = passwordService;
     }
 
     @Override
@@ -65,7 +57,9 @@ public class JwtTokenInterceptor extends OncePerRequestFilter {
                 if (!userIdFromJWT.equals(jsonString)) {
                     throw TeamException.Login_ShiXiao;
                 }
-                String password = service.getUserPassword(userIdFromJWT);
+//                String password = service.getUserPassword(userIdFromJWT);
+                String password = passwordService.getPassword(userIdFromJWT);
+
                 // 获取用户的权限列表
                 List<String> permissions = service.getUserPermissions(userIdFromJWT);
 

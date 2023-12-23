@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.Interceptor.JwtTokenInterceptor;
 import com.example.demo.security.MyUserDetailServiceImpl;
 import com.example.demo.service.SysLoginService;
+import com.example.demo.service.impl.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,10 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SysLoginService service;
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+    @Autowired
+    private PasswordService passwordService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 //   @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -74,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(failureHandler);
 //                .and()
 //                .addFilter(new JwtTokenInterceptor(authenticationManager(),redisTemplate, UsernamePasswordAuthenticationFilter.class));
-        http.addFilterBefore(new JwtTokenInterceptor(redisTemplate,authenticationManager(),service),UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtTokenInterceptor(redisTemplate,authenticationManager(),service,passwordService),UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

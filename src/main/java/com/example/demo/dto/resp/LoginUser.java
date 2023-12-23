@@ -25,11 +25,13 @@ public class LoginUser implements UserDetails , Serializable {
     //存储权限信息
     private List<String> permissions;
 
+//    private String userPasswordStorgae;
 //    private String encodedPassword;
 
     public LoginUser(SysLoginEntity sysLoginEntity, List<String> permissions) {
         this.sysLoginEntity = sysLoginEntity;
         this.permissions = permissions;
+//        this.userPasswordStorgae = userPasswordStorage;
     }
 
     public LoginUser() {

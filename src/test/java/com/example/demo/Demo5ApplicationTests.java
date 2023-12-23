@@ -12,9 +12,7 @@ class Demo5ApplicationTests {
 
     @Test
     void contextLoads() {
-        String rawPassword = "$2a$2a$10$lUXKNIhANxEvVrozauXSIu6cIcvgVkNVt7xEclj4d72y/ZFFIyEye\n" +
-                "$2a$10$lUXKNIhANxEvVrozauXSIu6cIcvgVkNVt7xEclj4d72y/ZFFIyEye\n" +
-                "$2a$10$lUXKNIhANxEvVrozauXSIu6cIcvgVkNVt7xEclj4d72y/ZFFIyEye";
+        String rawPassword = "2003";
 
         // 创建BCryptPasswordEncoder实例
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

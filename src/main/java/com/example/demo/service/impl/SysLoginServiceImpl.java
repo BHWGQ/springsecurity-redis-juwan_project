@@ -14,6 +14,7 @@ import com.example.demo.service.SysLoginService;
 import com.example.demo.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,12 +41,13 @@ public class SysLoginServiceImpl extends ServiceImpl<SysLoginMapper, SysLoginEnt
     @Override
     public String login(SysLoginReq req) {
         LambdaQueryWrapper<SysLoginEntity> sysLoginEntityLambdaQueryWrapper = new QueryWrapper<SysLoginEntity>().lambda()
-                .eq(SysLoginEntity::getUserName,req.getUsername())
-                .eq(SysLoginEntity::getPassword,req.getPassword());
+                .eq(SysLoginEntity::getUserName,req.getUsername());
         SysLoginEntity sysLoginEntity = mapper.selectOne(sysLoginEntityLambdaQueryWrapper);
         if (Objects.isNull(sysLoginEntity)){
             return null;
         }
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean isPasswordMatch = passwordEncoder.matches(req.getPassword(),sysLoginEntity.getPassword());
         if (sysLoginEntity.getStatus() != 0){
             throw new RuntimeException("用户已被禁用");
         }
